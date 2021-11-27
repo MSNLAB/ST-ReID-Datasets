@@ -67,10 +67,9 @@ class Extractor(ExtractorModule):
                 img_path = os.path.join(base_path, img_name)
                 img_info = self._extract_detail(img_name)
                 cam_id = img_info['camera']
-                seq_id = img_info['sequence']
                 person_id = img_info['id']
                 if person_id > 0:
-                    self.img_list.append((cam_id, seq_id * 1e4 + person_id, img_path))
+                    self.img_list.append((cam_id, person_id, img_path))
 
     @staticmethod
     def _extract_detail(img_name: str) -> Dict:
