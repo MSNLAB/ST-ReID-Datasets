@@ -1,6 +1,6 @@
 import os
 import shutil
-from math import ceil, floor
+from math import ceil, floor, e
 from typing import Tuple, List
 
 import numpy as np
@@ -15,6 +15,7 @@ class Shuffle(object):
             self,
             split_indice: Tuple[float, float, float] = (0.8, 0.1, 0.7),
             task_indice: Tuple[int, int] = (5, 8),
+            temporal_indice: Tuple[int, int] = (0.5, 3.0)
     ):
         """
         Shuffle the Datapack images to fcl tasks
@@ -31,6 +32,7 @@ class Shuffle(object):
         """
         self.split_indice = split_indice
         self.task_indice = task_indice
+        self.temporal_indice = temporal_indice
 
     @staticmethod
     def _adjust_camera_count(datapack: DataPack, camera_num: int):
@@ -92,6 +94,64 @@ class Shuffle(object):
         datapack.current_camera = len(_datapack.keys()) - 1
 
     @staticmethod
+    def _sample_person_seq(
+            datapack: DataPack,
+            task_cnt: int,
+            temporal_ratio: float = 0.5,
+            temporal_distance: float = 3.0,
+    ):
+        for cam_id, person_seq in datapack.pack.items():
+            task_size = floor(len(person_seq) / task_cnt)
+            person_ids = np.array(list(person_seq.keys()))
+
+            # random replace two person id from different tasks
+            for swap_cnt in range(int(temporal_ratio * task_size * e)):
+                x = y = 0
+                while not 1.0 * task_size <= x - y <= temporal_distance * task_size:
+                    x = np.random.randint(0, len(person_seq))
+                    y = np.random.randint(0, len(person_seq))
+                person_ids[x], person_ids[y] = person_ids[y], person_ids[x]
+
+            # random replace two different tasks
+
+            task_resample_idx = np.arange(task_cnt)
+            for swap_cnt in range(int(temporal_ratio * task_cnt)):
+                x = y = 0
+                while not 1.0 <= x - y <= temporal_distance:
+                    x = np.random.randint(0, task_cnt)
+                    y = np.random.randint(0, task_cnt)
+                task_resample_idx[x], task_resample_idx[y] = task_resample_idx[y], task_resample_idx[x]
+
+            _person_ids = np.zeros_like(person_ids)
+            for task_id, source_pop_idx in enumerate(range(0, len(person_seq), task_size)):
+                if task_id < task_cnt:
+                    target_pop_idx = task_resample_idx[task_id] * task_size
+                    _person_ids[source_pop_idx:source_pop_idx + task_size] = \
+                        person_ids[target_pop_idx:target_pop_idx + task_size]
+                else:
+                    _person_ids[source_pop_idx:] = person_ids[source_pop_idx:]
+            person_ids = _person_ids
+
+            # sort person ids of each task
+            for pop_idx in range(0, len(person_seq), task_size):
+                person_ids[pop_idx:pop_idx + task_size] = sorted(person_ids[pop_idx:pop_idx + task_size])
+                # if pop_idx // task_size < task_cnt:
+                #     from matplotlib import pyplot as plt
+                #     plt.figure(figsize=(8, 3), dpi=300)
+                #     x_labels = [p for p in range(0, 60)]
+                #     y_labels = [0 for _ in range(0, 60)]
+                #     for idx in range(pop_idx, pop_idx + task_size):
+                #         if idx < len(person_ids):
+                #             t = int(person_ids[idx] / 100)
+                #             y_labels[x_labels.index(t)] += 1
+                #     plt.plot(x_labels, y_labels)
+                #     plt.show()
+
+            # apply the changes in datapack
+            _person_seq = {person_id: person_seq[person_id] for person_id in person_ids}
+            datapack.pack[cam_id] = _person_seq
+
+    @staticmethod
     def save_imgs(img_path_list: List, save_dir: str):
         if not os.path.exists(save_dir):
             os.makedirs(save_dir)
@@ -100,11 +160,14 @@ class Shuffle(object):
             shutil.copyfile(img_path, save_path)
 
     def shuffle_and_save(self, datapack: DataPack, output: str, seed: int = 123):
+        np.random.seed(seed)
+
         # adjust camera view count if the number of view is less than edge node
         if datapack.current_camera + 1 != self.task_indice[0]:
             self._adjust_camera_count(datapack, self.task_indice[0])
 
         # shuffle and save the dataset
+        self._sample_person_seq(datapack, self.task_indice[1], self.temporal_indice[0], self.temporal_indice[1])
         for cam_id, person_seq in tqdm(datapack.pack.items(), desc="Saving"):
             batch_id = -1
             batch_size = ceil(len(person_seq) / self.task_indice[1])
@@ -125,7 +188,6 @@ class Shuffle(object):
                 gallery_save_dir = os.path.join(task_save_dir, 'gallery', f'{person_id}')
 
                 img_list_size = len(img_list)
-                np.random.seed(seed)
                 np.random.shuffle(img_list)
 
                 # img_list is the total images from current person id and camera.
