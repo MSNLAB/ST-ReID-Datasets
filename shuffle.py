@@ -135,17 +135,16 @@ class Shuffle(object):
             # sort person ids of each task
             for pop_idx in range(0, len(person_seq), task_size):
                 person_ids[pop_idx:pop_idx + task_size] = sorted(person_ids[pop_idx:pop_idx + task_size])
-                # if pop_idx // task_size < task_cnt:
-                #     from matplotlib import pyplot as plt
-                #     plt.figure(figsize=(8, 3), dpi=300)
-                #     x_labels = [p for p in range(0, 60)]
-                #     y_labels = [0 for _ in range(0, 60)]
-                #     for idx in range(pop_idx, pop_idx + task_size):
-                #         if idx < len(person_ids):
-                #             t = int(person_ids[idx] / 100)
-                #             y_labels[x_labels.index(t)] += 1
-                #     plt.plot(x_labels, y_labels)
-                #     plt.show()
+
+            # plot histogram of person ids distribution
+            from matplotlib import pyplot as plt
+            plt.figure(figsize=(25, 3), dpi=300)
+            for pop_idx in range(0, len(person_seq), task_size):
+                if pop_idx // task_size < task_cnt:
+                    datas = [person_ids[idx] for idx in range(pop_idx, pop_idx + task_size)]
+                    plt.subplot(1, task_cnt, 1 + pop_idx // task_size)
+                    plt.hist(datas, bins=20, rwidth=5, range=(min(person_ids), max(person_ids)))
+            plt.show()
 
             # apply the changes in datapack
             _person_seq = {person_id: person_seq[person_id] for person_id in person_ids}
