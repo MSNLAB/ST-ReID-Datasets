@@ -23,16 +23,18 @@ You can quickly split the datasets with default configuration for your experimen
 
  ```shell
  $ python3 main.py \
-     --datasets prid prid2011 market1501 pku msmt17 \
-     --roots ./datasets/ethz \
+     --datasets market1501 duke prid2011 pku cuhk03 ethz \
+     --roots ./datasets/Market-1501 \
+             ./datasets/DukeMTMC-reID \
              ./datasets/prid_2011 \
-             ./datasets/Market-1501 \
              ./datasets/pku_reid \
-             ./datasets/MSMT17 \
+             ./datasets/CUHK-03 \
+             ./datasets/ethz \
      --output ./datasets/preprocessed \
      --split_indice 0.8 0.1 0.7 \
      --task_indice 5 10 \
-     --random_seed 123 
+     --temporal_indice 0.5 3.0 \
+     --random_seed 123
  ```
 
 # Datasets
@@ -45,6 +47,7 @@ You can quickly split the datasets with default configuration for your experimen
 | [PKU-ReID](https://github.com/charliememory/PKU-Reid-Dataset) |     2016     |    114     |    2    |     1     |  1,824  | [Google Drive](https://drive.google.com/file/d/1OI3fA4HipmgubbYjAxdFrTcku9OmJ5Kc/view?usp=sharing) |
 |   [MSMT17](http://www.pkuvmc.com/publications/msmt17.html)   |     2018     |    4101    |   15    |     1     | 126,441 | [Google Drive](https://drive.google.com/file/d/1JEDDBPV8y7D7y_s6rWbz1csIUoT-getA/view?usp=sharing) |
 |     [DukeMTMC-ReID](http://vision.cs.duke.edu/DukeMTMC/)     |     2017     |    1812    |    8    |     1     | 36,441  | [Google Drive](https://drive.google.com/file/d/1TFSPnSwzGmzyJ3AGCFkPMskcnyJBDlem/view?usp=sharing) |
+| [CUHK-03](https://www.ee.cuhk.edu.hk/~xgwang/CUHK_identification.html) |     2014     |    1467    |    2    |     1     | 13,164  | [Google Drive](https://drive.google.com/file/d/1SCo2IV1XtcXcSGg0tQ-0_QnOW5s7N_De/view?usp=sharing) |
 
 # Contributing
 

@@ -1,4 +1,4 @@
-from extractor import ethz, prid2011, market1501, pku, msmt17, duke
+from extractor import ethz, prid2011, market1501, pku, msmt17, duke, cuhk03
 
 dataset_name = {
     "ethz": ethz.Extractor,
@@ -7,4 +7,5 @@ dataset_name = {
     "pku": pku.Extractor,
     "msmt17": msmt17.Extractor,
     "duke": duke.Extractor,
+    "cuhk03": cuhk03.Extractor
 }
