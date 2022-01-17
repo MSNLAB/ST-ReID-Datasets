@@ -56,12 +56,12 @@ class Extractor(ExtractorModule):
                 img_info = self._extract_detail(img_name)
                 cam_id = img_info['camera']
                 person_id = img_info['id']
-                self.img_list.append((cam_id, base_name + person_id, img_path))
+                self.img_list.append((cam_id, base_name + str(person_id), img_path))
 
     @staticmethod
     def _extract_detail(img_name: str) -> Dict:
         name_details = img_name.split('_', 2)
         return {
             'id': int(name_details[0]),
-            'camera': int(name_details[1]) % 5,
+            'camera': int(int(name_details[1][0:2]) / 5),
         }
