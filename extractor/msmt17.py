@@ -35,7 +35,7 @@ class Extractor(ExtractorModule):
         if not os.path.exists(self.root):
             raise ValueError(f"MSMT17 dataset path '{self.root}' could not be found.")
 
-        self._process("bounding_box_train")
+        # self._process("bounding_box_train")
         self._process("bounding_box_test")
         self._process("query")
 
