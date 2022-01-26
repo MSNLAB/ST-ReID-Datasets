@@ -1,6 +1,6 @@
 import os
 import shutil
-from math import ceil, floor, e
+from math import ceil, floor
 from typing import Tuple, List
 
 import numpy as np
@@ -105,7 +105,7 @@ class Shuffle(object):
             person_ids = np.array(list(person_seq.keys()))
 
             # random replace two person id from different tasks
-            for swap_cnt in range(int(temporal_ratio * task_size * e)):
+            for swap_cnt in range(int(temporal_ratio * task_size)):
                 x = y = 0
                 while not 1.0 * task_size <= x - y <= temporal_distance * task_size:
                     x = np.random.randint(0, len(person_seq))
@@ -113,7 +113,6 @@ class Shuffle(object):
                 person_ids[x], person_ids[y] = person_ids[y], person_ids[x]
 
             # random replace two different tasks
-
             task_resample_idx = np.arange(task_cnt)
             for swap_cnt in range(int(temporal_ratio * task_cnt)):
                 x = y = 0
@@ -137,14 +136,14 @@ class Shuffle(object):
                 person_ids[pop_idx:pop_idx + task_size] = sorted(person_ids[pop_idx:pop_idx + task_size])
 
             # plot histogram of person ids distribution
-            from matplotlib import pyplot as plt
-            plt.figure(figsize=(25, 3), dpi=300)
-            for pop_idx in range(0, len(person_seq), task_size):
-                if pop_idx // task_size < task_cnt:
-                    datas = [person_ids[idx] for idx in range(pop_idx, pop_idx + task_size)]
-                    plt.subplot(1, task_cnt, 1 + pop_idx // task_size)
-                    plt.hist(datas, bins=20, rwidth=5, range=(min(person_ids), max(person_ids)))
-            plt.show()
+            # from matplotlib import pyplot as plt
+            # plt.figure(figsize=(25, 3), dpi=300)
+            # for pop_idx in range(0, len(person_seq), task_size):
+            #     if pop_idx // task_size < task_cnt:
+            #         datas = [person_ids[idx] for idx in range(pop_idx, pop_idx + task_size)]
+            #         plt.subplot(1, task_cnt, 1 + pop_idx // task_size)
+            #         plt.hist(datas, bins=20, rwidth=5, range=(min(person_ids), max(person_ids)))
+            # plt.show()
 
             # apply the changes in datapack
             _person_seq = {person_id: person_seq[person_id] for person_id in person_ids}
@@ -203,39 +202,28 @@ class Shuffle(object):
                 tr_img_list = []
                 query_img_list = []
                 gallery_img_list = []
+
                 split_pivot = self.split_indice[0] * img_list_size
 
-                # choose the fist images before split pivot as train images
-                tr_img_list.extend(img_list[:floor(split_pivot)])
+                # choose the images before split pivot as train images
+                tr_img_list.extend(img_list[:ceil(split_pivot)])
 
-                # choose query images from different cameras
+                # choose the images between pre-split-pivot and new split_pivot
+                pre_split_pivot = split_pivot
+                split_pivot = (self.split_indice[0] + self.split_indice[1]) * img_list_size
+                query_img_list.extend(img_list[floor(pre_split_pivot):ceil(split_pivot)])
+
+                # choose gallery images from different cameras
                 for other_cam_id, other_person_seq in datapack.pack.items():
                     if cam_id == other_cam_id:
                         continue
                     if person_id in other_person_seq.keys():
                         np.random.seed(seed)
-                        query_img_list.extend(np.random.choice(
+                        gallery_img_list.extend(np.random.choice(
                             other_person_seq[person_id],
-                            size=int(len(other_person_seq[person_id]) * self.split_indice[1]),
+                            size=int(len(other_person_seq[person_id]) * self.split_indice[2]),
                             replace=False
                         ).tolist())
-
-                # if other camera not exists, then choose the part of images from current cameras
-                # after split pivot, and push the split pivot forward.
-                # if len(query_img_list) == 0:
-                #     pre_split_pivot = split_pivot
-                #     split_pivot = (self.split_indice[0] + self.split_indice[1]) * img_list_size
-                #     query_img_list.extend(img_list[floor(pre_split_pivot):ceil(split_pivot)])
-                pre_split_pivot = split_pivot
-                split_pivot = (self.split_indice[0] + self.split_indice[1]) * img_list_size
-                query_img_list.extend(img_list[floor(pre_split_pivot):ceil(split_pivot)])
-
-                # choose rest of current camera images and some part of training images as gallery
-                gallery_img_list.extend(np.random.choice(
-                    tr_img_list,
-                    size=ceil(len(tr_img_list) * self.split_indice[2]),
-                    replace=False
-                ).tolist() + img_list[ceil(split_pivot):])
 
                 if len(tr_img_list):
                     self.save_imgs(tr_img_list, tr_save_dir)
