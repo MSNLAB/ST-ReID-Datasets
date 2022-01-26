@@ -23,13 +23,14 @@ You can quickly split the datasets with default configuration for your experimen
 
  ```shell
  $ python3 main.py \
-     --datasets market1501 duke prid2011 pku cuhk03 ethz \
+     --datasets market1501 duke prid2011 pku cuhk03 ethz personx \
      --roots ./datasets/Market-1501 \
              ./datasets/DukeMTMC-reID \
              ./datasets/prid_2011 \
              ./datasets/pku_reid \
              ./datasets/CUHK-03 \
              ./datasets/ethz \
+             ./datasets/PersonX \
      --output ./datasets/preprocessed \
      --split_indice 0.8 0.1 0.7 \
      --task_indice 5 10 \
@@ -48,6 +49,7 @@ You can quickly split the datasets with default configuration for your experimen
 |   [MSMT17](http://www.pkuvmc.com/publications/msmt17.html)   |     2018     |    4101    |   15    |     1     | 126,441 | [Google Drive](https://drive.google.com/file/d/1JEDDBPV8y7D7y_s6rWbz1csIUoT-getA/view?usp=sharing) |
 |     [DukeMTMC-ReID](http://vision.cs.duke.edu/DukeMTMC/)     |     2017     |    1812    |    8    |     1     | 36,441  | [Google Drive](https://drive.google.com/file/d/1TFSPnSwzGmzyJ3AGCFkPMskcnyJBDlem/view?usp=sharing) |
 | [CUHK-03](https://www.ee.cuhk.edu.hk/~xgwang/CUHK_identification.html) |     2014     |    1467    |    2    |     1     | 13,164  | [Google Drive](https://drive.google.com/file/d/1SCo2IV1XtcXcSGg0tQ-0_QnOW5s7N_De/view?usp=sharing) |
+|       [PersonX](https://arxiv.org/pdf/1812.02162.pdf)        |     2019     |    1266    |   12    |     1     | 45,792  | [Google Drive](https://drive.google.com/file/d/1wduqO07sDpKH8LrnURx9-9U6x1XsChyn/view?usp=sharing) |
 
 # Contributing
 
