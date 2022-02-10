@@ -1,4 +1,5 @@
 import os
+import random
 import shutil
 from math import ceil, floor
 from typing import Tuple, List
@@ -33,6 +34,17 @@ class Shuffle(object):
         self.split_indice = split_indice
         self.task_indice = task_indice
         self.temporal_indice = temporal_indice
+
+    @staticmethod
+    def _relabel_person_id(datapack: DataPack):
+        id_lut = list(range(datapack.current_person + 1))
+        random.shuffle(id_lut)
+        _pack = {}
+        for cam_id, protos in datapack.pack.items():
+            _pack[cam_id] = {}
+            for person_id, imgs in protos.items():
+                _pack[cam_id][id_lut[person_id]] = imgs
+        datapack.pack = _pack
 
     @staticmethod
     def _adjust_camera_count(datapack: DataPack, camera_num: int):
@@ -159,6 +171,9 @@ class Shuffle(object):
 
     def shuffle_and_save(self, datapack: DataPack, output: str, seed: int = 123):
         np.random.seed(seed)
+
+        # relabel person ids
+        self._relabel_person_id(datapack)
 
         # adjust camera view count if the number of view is less than edge node
         if datapack.current_camera + 1 != self.task_indice[0]:
