@@ -12,12 +12,12 @@
 
 # Quick Start
 
-Federated Continual Learning applied in Re-ID exists at least 2 issues for datasets:
+Prior federated continual learning applied in Re-ID exists at least 2 issues for datasets:
 
 > 1. Various camera angles are needed for collaborative training across nodes;
 > 2. Multi-sequences condition, as different tasks, require fulfilled in continual learning.
 
-It is quite pity to say that currently, there are not exists an adequate dataset holding various camera visual angles and time sequences to represent the real Re-ID scene. In that case, we provide a solution that mixture and shuffle the current existing public datasets into various angles and sequences to represent reality.
+Before our repository, there not exists an adequate dataset holding various camera visual angles and time sequences to represent the real Re-ID scene. In that case, we provide a solution that mixture and shuffle the current existing public datasets into various angles and sequences to represent reality.
 
 You can quickly split the datasets with default configuration for your experiment as follows before download them:
 
