@@ -1,5 +1,6 @@
 import os
 import re
+import warnings
 from typing import Dict
 
 from tqdm import tqdm
@@ -25,6 +26,11 @@ class Extractor(ExtractorModule):
     |   | -- ...
     """
 
+    @warnings.warn("\033[5;31m\n"
+                   "DukeMTMC-ReID has been retracted and should not be used.\n"
+                   "For more details: https://exposing.ai/duke_mtmc/\n"
+                   "\033[0m\n"
+        , DeprecationWarning)
     def __init__(self, datapack: DataPack, root: str, download: bool = False, **kwargs):
         super(Extractor, self).__init__(datapack, root, download, **kwargs)
         self.datapack = datapack
