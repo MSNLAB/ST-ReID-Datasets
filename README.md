@@ -23,9 +23,8 @@ You can quickly split the datasets with default configuration for your experimen
 
  ```shell
  $ python3 main.py \
-     --datasets market1501 duke prid2011 pku cuhk03 ethz personx \
+     --datasets market1501 prid2011 pku cuhk03 ethz personx \
      --roots ./datasets/Market-1501 \
-             ./datasets/DukeMTMC-reID \
              ./datasets/prid_2011 \
              ./datasets/pku_reid \
              ./datasets/CUHK-03 \
@@ -47,7 +46,7 @@ You can quickly split the datasets with default configuration for your experimen
 | [Market1501](http://www.liangzheng.com.cn/Project/project_reid.html) |     2015     |    1501    |    6    |     6     | 32,217  | [Google Drive](https://drive.google.com/file/d/1qu9V5WLADH43f8_a6bsfe6mkYlPAdMJL/view?usp=sharing) |
 | [PKU-ReID](https://github.com/charliememory/PKU-Reid-Dataset) |     2016     |    114     |    2    |     1     |  1,824  | [Google Drive](https://drive.google.com/file/d/1OI3fA4HipmgubbYjAxdFrTcku9OmJ5Kc/view?usp=sharing) |
 |   [MSMT17](http://www.pkuvmc.com/publications/msmt17.html)   |     2018     |    4101    |   15    |     1     | 126,441 | [Google Drive](https://drive.google.com/file/d/1JEDDBPV8y7D7y_s6rWbz1csIUoT-getA/view?usp=sharing) |
-|     [DukeMTMC-ReID](http://vision.cs.duke.edu/DukeMTMC/)     |     2017     |    1812    |    8    |     1     | 36,441  | [Google Drive](https://drive.google.com/file/d/1TFSPnSwzGmzyJ3AGCFkPMskcnyJBDlem/view?usp=sharing) |
+|     [~~DukeMTMC-ReID~~](http://vision.cs.duke.edu/DukeMTMC/)     |     2017     |    1812    |    8    |     1     | 36,441  | [*Retracted*](https://exposing.ai/duke_mtmc/) |
 | [CUHK-03](https://www.ee.cuhk.edu.hk/~xgwang/CUHK_identification.html) |     2014     |    1467    |    2    |     1     | 13,164  | [Google Drive](https://drive.google.com/file/d/1SCo2IV1XtcXcSGg0tQ-0_QnOW5s7N_De/view?usp=sharing) |
 |       [PersonX](https://arxiv.org/pdf/1812.02162.pdf)        |     2019     |    1266    |   12    |     1     | 45,792  | [Google Drive](https://drive.google.com/file/d/1wduqO07sDpKH8LrnURx9-9U6x1XsChyn/view?usp=sharing) |
 
